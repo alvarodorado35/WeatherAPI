@@ -39,10 +39,11 @@ This project is an API that receives latitude and longitude coordinates and retu
 2. Follow the instructions to start the MongoDB server.
 
 ### macOS
-```bash
+
 brew tap mongodb/brew
 brew install mongodb-community
 brew services start mongodb/brew/mongodb-community
+
 
 ### Linux
 sudo apt-get install -y mongodb
