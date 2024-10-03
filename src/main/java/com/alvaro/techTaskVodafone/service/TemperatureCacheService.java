@@ -19,9 +19,6 @@ public class TemperatureCacheService {
     private TemperatureRepository temperatureRepository;
 
     public Optional<Temperature> getCachedTemperature(double latitude, double longitude){
-        System.out.println("Latitud que me llega" + latitude);
-        System.out.println("Longitud que me llega" + longitude);
-
 
         Optional<Temperature> cachedData = temperatureRepository.findLatestByLatitudeAndLongitude(latitude, longitude);
 

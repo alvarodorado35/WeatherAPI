@@ -49,7 +49,6 @@ public class WeatherController {
             @RequestParam double latitude,
             @Parameter(description = "Longitude of the location", required = true, example = "-4.42034")
             @RequestParam double longitude){
-        System.out.println("%%%%%%%%%%%Elimino duplicados%%%%%%%%%%%");
         temperatureCacheService.removeOldDuplicates(latitude,longitude);
         Optional<Temperature> cachedData = temperatureCacheService.getCachedTemperature(latitude,longitude);
 
@@ -65,11 +64,8 @@ public class WeatherController {
         temperature.setLongitude(longitude);
         temperature.setTemperature(weatherResponse.getTemperature());
         temperature.setTimeStamp(LocalDateTime.now());
-
-
-        System.out.println("%%%%%%%%%%%Guardo en base de datos%%%%%%%%%%%");
+        
         temperatureCacheService.saveTemperature(temperature);
-        System.out.println("%%%%%%%%%%%Guardado%%%%%%%%%%%");
 
         return weatherResponse;
     }
