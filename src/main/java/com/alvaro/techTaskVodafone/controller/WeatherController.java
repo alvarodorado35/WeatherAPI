@@ -64,7 +64,7 @@ public class WeatherController {
         temperature.setLongitude(longitude);
         temperature.setTemperature(weatherResponse.getTemperature());
         temperature.setTimeStamp(LocalDateTime.now());
-        
+
         temperatureCacheService.saveTemperature(temperature);
 
         return weatherResponse;
