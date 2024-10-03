@@ -14,8 +14,6 @@ This project is an API that receives latitude and longitude coordinates and retu
 - [Delete Data](#delete-data)
 - [Contributions](#contributions)
 - [Contact](#contact)
-- [Version Control](#version-control)
-
 
 ## Technologies Used
 - Spring Boot
@@ -54,12 +52,12 @@ Configure the MongoDB connection in src/main/resources/application.properties
 
 spring.data.mongodb.uri=mongodb://localhost:27017/weatherdb
 
-##Running the project 
+## Running the project 
     - Ensure MOngoDB is running. 
     - From the project directory, execute: 
         mvn spring-boot:run 
 
-##API Usage 
+## API Usage 
     - GET /weather?latitude={lat}&longitude={long} 
         Returns the current temperature in JSON format. 
         Example response: 
@@ -69,16 +67,16 @@ spring.data.mongodb.uri=mongodb://localhost:27017/weatherdb
             "temperature": 25.2
         } 
 
-##Swagger Documentation 
+## Swagger Documentation 
         Access the interactive Swagger documentation at:
             http://localhost:8080/swagger-ui/index.html
 
-##Delete Data
+## Delete Data
     - DELETE /weather?latitude={lat}&longitude={long} 
         Deletes the corresponding entry from the database.
 
-##Contributions
+## Contributions
 If you would like to contribute, please fork the repository and submit a pull request. 
 
-##Contact
+## Contact
 For questions or support, contact adorado51@gmail.com 
