@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,10 @@ public class WeatherController {
 
     @Autowired
     private TemperatureCacheService temperatureCacheService;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     @Operation(summary = "Get current temperature", description = "Provide latitude and longitude to get the current temperature")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved weather information",
@@ -52,20 +57,25 @@ public class WeatherController {
         temperatureCacheService.removeOldDuplicates(latitude,longitude);
         Optional<Temperature> cachedData = temperatureCacheService.getCachedTemperature(latitude,longitude);
 
+        WeatherResponse weatherResponse;
+
         if(cachedData.isPresent()) {
-            return new WeatherResponse(latitude,longitude,cachedData.get().getTemperature());
+            weatherResponse= new WeatherResponse(latitude,longitude,cachedData.get().getTemperature());
+        }else {
+            weatherResponse = weatherService.getCurrentWeather(latitude,longitude);
+
+            Temperature temperature = new Temperature();
+
+            temperature.setLatitude(latitude);
+            temperature.setLongitude(longitude);
+            temperature.setTemperature(weatherResponse.getTemperature());
+            temperature.setTimeStamp(LocalDateTime.now());
+
+            temperatureCacheService.saveTemperature(temperature);
         }
 
-        WeatherResponse weatherResponse = weatherService.getCurrentWeather(latitude,longitude);
-
-        Temperature temperature = new Temperature();
-
-        temperature.setLatitude(latitude);
-        temperature.setLongitude(longitude);
-        temperature.setTemperature(weatherResponse.getTemperature());
-        temperature.setTimeStamp(LocalDateTime.now());
-
-        temperatureCacheService.saveTemperature(temperature);
+        String message = String.format("Latitude: %s, Longitude: %s, Temperature: %s", latitude, longitude, weatherResponse.getTemperature());
+        kafkaTemplate.send("my-Topic", message);
 
         return weatherResponse;
     }
