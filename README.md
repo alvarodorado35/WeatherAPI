@@ -11,7 +11,8 @@ This project is an API that receives latitude and longitude coordinates and retu
 - [Running the Project](#running-the-project)
 - [API Usage](#api-usage)
 - [Swagger Documentation](#swagger-documentation)
-- [Delete Data](#delete-data)
+- [Delete Data](#delete-data) 
+- [Kafka Integration](#kafka-integration)
 - [Contributions](#contributions)
 - [Contact](#contact)
 
@@ -74,6 +75,35 @@ spring.data.mongodb.uri=mongodb://localhost:27017/weatherdb
 ## Delete Data
     - DELETE /weather?latitude={lat}&longitude={long} 
         Deletes the corresponding entry from the database.
+
+## Kafka Integration
+
+This project utilizes Apache Kafka to handle messaging between the producers and consumers of weather data.
+
+### Requirements
+
+- Docker
+- Docker Compose
+
+### Installing Kafka
+
+To start Kafka, run the following commands in the root of the project:        
+    docker-compose up -d
+
+This will start the Kafka and Zookeeper services. You can access Kafdrop at http://localhost:9000/ to view the messages in Kafka. 
+
+### Sending Messages
+
+When a GET request is received at the /weather endpoint, a message is sent to the my-Topic topic containing the latitude, longitude, and the corresponding temperature.
+
+### Running the Consumer
+To verify that messages are sent correctly, you can run the consumer:
+
+    java -jar SpringBootConsumer-0.0.1-SNAPSHOT.jar
+
+You should see messages in the console indicating that the data has been received. 
+    - Example message
+        INFO 18332 --- [ntainer#0-0-C-1] c.k.c.SpringBootConsumer.model.Consumer  : #### -> Consumed message -> Latitude: 36.72016, Longitude: -4.42034, Temperature: 27.5
 
 ## Contributions
 If you would like to contribute, please fork the repository and submit a pull request. 
